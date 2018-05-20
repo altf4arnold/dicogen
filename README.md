@@ -1,12 +1,12 @@
 # Simple wordlist and hash generator
 
-##Dependencies :
+## Dependencies :
 * sqlite3
 * hashlib
 * itertools
 * python 3
 
-##How to run :
+## How to run :
 
 To generate the database (be carefull, the database can get very big very fast) :
 ```python3 dicogen.py gen```
