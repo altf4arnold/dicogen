@@ -27,13 +27,17 @@ def databaseinit():
 	database.close()
 	return 0
 
-def write(words):
+def write(initiator,generated):
 	#Here, we are writing the results and making hashes and writing them to the database
+	turns=len(generated)
+	turning=0
 	database = sqlite3.connect('dico.db')
 	c=database.cursor()
 	#print(words)   #Was used for testing
 	#print(hashlib.sha1(words.encode('utf-8')).hexdigest())  #Was used for testing
-	c.execute("INSERT INTO words (clear,sha1,sha256,md5) VALUES (?,?,?,?)",( words , hashlib.sha1(words.encode('utf-8')).hexdigest() , hashlib.sha256(words.encode('utf-8')).hexdigest() , hashlib.md5(words.encode('utf-8')).hexdigest() ) )
+	while turning<turns:
+		c.execute("INSERT INTO words (clear,sha1,sha256,md5) VALUES (?,?,?,?)",( generated[turning] , generated[turning+1] , generated[turning+2], generated[turning+3] ))
+		turning=turning+4
 	database.commit()
 	c.close()
 	database.close()
@@ -43,12 +47,15 @@ def allwords(chars, length):
     for letters in product(chars, repeat=length):
         yield ''.join(letters)
 
-def initiator(characters):
+def initiator(characters,output):
 	#Setting up words
     letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     for wordlen in range(characters[0],characters[1]+1):
         for word in allwords(letters, wordlen):
-            write(word)
+            output.append(word)
+            output.append(hashlib.sha1(word.encode('utf-8')).hexdigest())
+            output.append(hashlib.sha256(word.encode('utf-8')).hexdigest())
+            output.append(hashlib.md5(word.encode('utf-8')).hexdigest())
     print("DONE !")
 
 def generatorcontrolpannel():
@@ -70,11 +77,14 @@ def reader():
 	print("clear : ",clear[0], "\nsha1 : ", sha1[0], "\nsha256 : ", sha256[0], "\nmd5 : ", md5[0])
 	database.close()
 
+
+generated=[]
+
 if select()==0:
 	reader()
 elif select()==1:
 	if databaseinit()==0:
-		initiator(generatorcontrolpannel())
+		write(initiator(generatorcontrolpannel(),generated),generated)
 	else:
 		print("Whooops, an error occured while creating the database\n")
 		print("Please verify your permissions")
