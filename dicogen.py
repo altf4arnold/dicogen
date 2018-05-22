@@ -91,3 +91,5 @@ elif select()==1:
 
 elif select()==10:
 	print("You've entered bullshit :'(")
+
+#Made with ❤ by altf4
