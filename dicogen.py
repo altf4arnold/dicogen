@@ -74,12 +74,13 @@ def generatorcontrolpannel():
 def reader():
 	#Module used to read the database
 	research=input("What do you want to look up ? : ")
+	#print (research) #Used for testing purpose
 	database = sqlite3.connect('dico.db')
 	c=database.cursor()
-	clear = c.execute("SELECT clear FROM words WHERE clear OR sha1 OR sha256 OR md5 LIKE '%s'"%research).fetchone()
-	sha1 = c.execute("SELECT sha1 FROM words WHERE clear OR sha1 OR sha256 OR md5 LIKE '%s'"%research).fetchone()
-	sha256 = c.execute("SELECT sha256 FROM words WHERE clear OR sha1 OR sha256 OR md5 LIKE '%s'"%research).fetchone()
-	md5 = c.execute("SELECT md5 FROM words WHERE clear OR sha1 OR sha256 OR md5 LIKE '%s'"%research).fetchone()
+	clear = c.execute("SELECT clear FROM words WHERE clear=? OR sha1=? OR sha256=? OR md5=?",(research,research,research,research,)).fetchone()
+	sha1 = c.execute("SELECT sha1 FROM words WHERE clear=? OR sha1=? OR sha256=? OR md5=?",(research,research,research,research,)).fetchone()
+	sha256 = c.execute("SELECT sha256 FROM words WHERE clear=? OR sha1=? OR sha256=? OR md5=?",(research,research,research,research,)).fetchone()
+	md5 = c.execute("SELECT md5 FROM words WHERE clear=? OR sha1=? OR sha256=? OR md5=?",(research,research,research,research,)).fetchone()
 	print("clear : ",clear[0], "\nsha1 : ", sha1[0], "\nsha256 : ", sha256[0], "\nmd5 : ", md5[0])
 	database.close()
 
