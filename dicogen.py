@@ -3,6 +3,7 @@ import hashlib
 import sys
 import os
 from itertools import product
+import math
 
 def select():
 	#This module is watching if we are asking to generate the dictionnary
@@ -31,13 +32,18 @@ def write(initiator,generated):
 	#Here, we are writing the results and making hashes and writing them to the database
 	turns=len(generated)
 	turning=0
+	writer=0
 	database = sqlite3.connect('dico.db')
 	c=database.cursor()
 	#print(words)   #Was used for testing
 	#print(hashlib.sha1(words.encode('utf-8')).hexdigest())  #Was used for testing
 	while turning<turns:
-		c.execute("INSERT INTO words (clear,sha1,sha256,md5) VALUES (?,?,?,?)",( generated[turning] , generated[turning+1] , generated[turning+2], generated[turning+3] ))
-		turning=turning+4
+		if writer%9592==0:
+			database.commit()
+		else:
+			c.execute("INSERT INTO words (clear,sha1,sha256,md5) VALUES (?,?,?,?)",( generated[turning] , generated[turning+1] , generated[turning+2], generated[turning+3] ))
+			turning=turning+4
+		writer=writer+1
 	database.commit()
 	c.close()
 	database.close()
