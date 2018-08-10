@@ -14,9 +14,9 @@ def select():
         if arguments[1]=='gen':
             return 1
         elif arguments[1]=='comp':
-            return 2
-        else:
             return 10
+        else:
+            return 2
 
 def databaseinit():
     #this module will generate the database 
