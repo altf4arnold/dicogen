@@ -9,14 +9,14 @@ def select():
     #This module is watching if we are asking to generate the dictionnary
     arguments=sys.argv
     if len(arguments)==1:
-        return 0
+        return 2
     else:
         if arguments[1]=='gen':
             return 1
         elif arguments[1]=='comp':
-            return 10
+            return 0
         else:
-            return 2
+            return 10
 
 def databaseinit():
     #this module will generate the database 
