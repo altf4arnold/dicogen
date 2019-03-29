@@ -19,7 +19,7 @@ def select():
             return 10
 
 def databaseinit():
-    #this module will generate the database 
+    #this module will generate the database
     os.system("rm -f dico.db")
     database = sqlite3.connect('dico.db')
     c=database.cursor()
@@ -33,22 +33,16 @@ def databaseinit():
 def write(initiator,generated):
 
 	#Here, we are writing the results and making hashes and writing them to the database
-	turns=len(generated)
 	turning=0
 	writer=1 #Because it's a prime number, it can be divided by 0 so it's at one to not triger the database.commit at the first turn
 	database = sqlite3.connect('dico.db')
 	c=database.cursor()
 	#print(words)   #Was used for testing
 	#print(hashlib.sha1(words.encode('utf-8')).hexdigest())  #Was used for testing
-	while turning<turns:
-		#9 592 is a prime number (I used it so that every X possibilitys, we flush the RAM to the DB)
-		if writer%9592==0:
-			database.commit()
-			writer=0
-		else:
-			c.execute("INSERT INTO words (clear,sha1,sha256,md5) VALUES (?,?,?,?)",( generated[turning] , generated[turning+1] , generated[turning+2], generated[turning+3] ))
-			turning=turning+4
-		writer=writer+1
+	for i in range(len(generated)/4):
+		c.execute("INSERT INTO words (clear,sha1,sha256,md5) VALUES (?,?,?,?)",\
+        ( generated[turning] , generated[turning+1] , generated[turning+2], \
+        generated[turning+3] ))
 	database.commit()
 	c.close()
 	database.close()
